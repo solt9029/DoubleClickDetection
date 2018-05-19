@@ -1,0 +1,37 @@
+#uselib "user32.dll"
+#func GetDoubleClickTime "GetDoubleClickTime"
+
+wait_time=5//repeat wait time
+GetDoubleClickTime        
+double_click_time=stat//get double click time
+mouse_left_pushed=0
+double_click_judge_time=0
+prev_x=0
+prev_y=0
+
+repeat
+    getkey mouse_left,1
+    if(mouse_left=0 && mouse_left_pushed=1){
+        mouse_left_pushed=0
+    }
+    if(double_click_judge_time=0){
+        if(mouse_left=1 && mouse_left_pushed=0){
+            mouse_left_pushed=1
+            double_click_judge_time=double_click_time
+            prev_x=ginfo(0)
+            prev_y=ginfo(1)
+        }
+    }
+    if(double_click_judge_time>0){
+        double_click_judge_time-=wait_time
+        if(mouse_left=1 && mouse_left_pushed=0){
+            mouse_left_pushed=1
+            double_click_judge_time=0
+            if(prev_x=ginfo(0) && prev_y=ginfo(1)){
+                dialog "double click"
+            }
+        }
+        title str(double_click_judge_time)
+    }
+    await wait_time
+loop
